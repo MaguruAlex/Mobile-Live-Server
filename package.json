@@ -1,0 +1,79 @@
+{
+  "name": "mobile-live-server",
+  "displayName": "Mobile Live Server",
+  "description": "Launch a local development server with live reload capability and multi-workspace support",
+  "version": "1.0.0",
+  "icon": "images/icon-128x128.png",
+  "engines": {
+    "vscode": "^1.22.0"
+  },
+  "categories": [
+    "Testing"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./src/ext.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.alec.startServer",
+        "title": "Start Live Server"
+      },
+      {
+        "command": "extension.alec.startMobileServer",
+        "title": "Mobile: Start Live Server"
+      },
+      {
+        "command": "extension.alec.stopServer",
+        "title": "Stop Live Server"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "extension.alec.startMobileServer",
+          "group": "2_workspace",
+          "when": "resourceLangId == html || workspaceFolderCount > 0 || isFileSystemResource || resourceLangId"
+        },
+        {
+          "command": "extension.alec.startServer",
+          "group": "2_workspace",
+          "when": "resourceLangId == html || workspaceFolderCount > 0 || isFileSystemResource ||  resourceLangId"
+        },
+        {
+          "command": "extension.alec.stopServer",
+          "group": "2_workspace",
+          "when": "resourceLangId == html || workspaceFolderCount > 0 || isFileSystemResource || resourceLangId"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "extension.alec.startMobileServer",
+          "group": "2_workspace",
+          "when": "resourceLangId == html || workspaceFolderCount > 0 || isFileSystemResource || resourceLangId"
+        },
+        {
+          "command": "extension.alec.startServer",
+          "group": "2_workspace",
+          "when": "resourceLangId == html || workspaceFolderCount > 0 || isFileSystemResource || resourceLangId"
+        },
+        {
+          "command": "extension.alec.stopServer",
+          "group": "2_workspace",
+          "when": "resourceLangId == html || workspaceFolderCount > 0 || isFileSystemResource || resourceLangId"
+        }
+      ]
+    }
+  },
+  "dependencies": {
+    "chokidar": "^3.6.0",
+    "open": "^8.4.2",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "daisyui": "^4.12.14",
+    "tailwindcss": "^3.4.15",
+    "postcss-cli": "^11.0.0"
+  }
+}
