@@ -7,10 +7,6 @@ A powerful local development server extension with live reload capability and mu
 - 📱 **Mobile debugging support** with Eruda DevTools
 - 🔄 **Live reload** on file changes
 - 📂 **Multi-workspace support**
-- 🎨 **Beautiful directory listing** with DaisyUI themes
-- 🔍 **File search functionality** (`Ctrl+K`)
-- 📊 **Detailed file information display**
-- 🌙 **Dark/Light theme switching**
 
 ## **Commands**
 - **Start Live Server**: Launch a development server
@@ -36,6 +32,9 @@ Mobile mode includes **Eruda DevTools** for comprehensive debugging on mobile de
 - **DOM inspection**
 - **Resource analysis**
 
+### **Eruda DevTools Attribution**
+Eruda is a powerful open-source debugging tool for mobile browsers. Visit the [Eruda GitHub repository](https://github.com/liriliri/eruda) for more details and contributions.
+
 ## **File Support**
 Supports various file types including:
 - **HTML, CSS, JavaScript**
@@ -52,7 +51,7 @@ Supports various file types including:
 Access through the editor/explorer context menu or status bar.
 
 ## **Release Notes**
-### **0.0.1**
+### **1.0.0**
 - Initial release
 - Live reload functionality
 - Mobile debugging support
@@ -62,7 +61,7 @@ Access through the editor/explorer context menu or status bar.
 - Directory listing
 
 ## **Contributing**
-Contributions welcome! Check out our [repository](https://github.com/MaguruAlex/Mobile-Live-Server.git) for details.
+Contributions welcome! Check out our [repository](https://github.com/MaguruAlex/Mobile-Live-Server) for details.
 
 ## **License**
 MIT  
