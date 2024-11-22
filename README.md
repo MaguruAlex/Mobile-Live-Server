@@ -62,7 +62,7 @@ Access through the editor/explorer context menu or status bar.
 - Directory listing
 
 ## **Contributing**
-Contributions welcome! Check out our [repository](#).
+Contributions welcome! Check out our [repository](https://github.com/MaguruAlex/Mobile-Live-Server.git) for details.
 
 ## **License**
 MIT  

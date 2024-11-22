@@ -3,6 +3,10 @@
   "displayName": "Mobile Live Server",
   "description": "Launch a local development server with live reload capability and multi-workspace support",
   "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MaguruAlex/Mobile-Live-Server.git"
+  },
   "icon": "images/icon-128x128.png",
   "engines": {
     "vscode": "^1.22.0"
