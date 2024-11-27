@@ -41,8 +41,8 @@ class StatusBarController {
         switch (state) {
             case 'idle':
                 this.statusBarItem.text = "$(broadcast) Go Live";
-                this.statusBarItem.command = 'extension.alec.startMobileServer';
-                this.statusBarItem.tooltip = 'Click to start mobile server';
+                this.statusBarItem.command = 'extension.alec.startServer';
+                this.statusBarItem.tooltip = 'Click to start server';
                 break;
             case 'starting':
                 this.statusBarItem.text = "$(sync~spin) Starting...";
@@ -174,7 +174,7 @@ function activate(context) {
 
     async function findFreePort(startPort = DEFAULT_PORT) {
         const net = require('net');
-        
+
         function isPortAvailable(port) {
             return new Promise((resolve) => {
                 const server = net.createServer()
@@ -191,30 +191,30 @@ function activate(context) {
         while (!(await isPortAvailable(testedPort))) {
             testedPort++;
         }
-        
+
         return testedPort;
     }
 
     let startServerCommand = vscode.commands.registerCommand('extension.alec.startServer', async () => {
         const workspace = await selectWorkspace();
         if (!workspace) return;
-        
+
         if (activeWorkspaces.has(workspace.uri.fsPath)) {
             vscode.window.showErrorMessage(
                 `Server is already running for Workspace: ${workspace.name}`);
             return;
         }
-        
+
         const port = await findFreePort();
         await statusBarController.startServer(port);
         startServer(workspace.uri.fsPath, port, false);
     });
-    
+
 
     let startMobileServerCommand = vscode.commands.registerCommand('extension.alec.startMobileServer', async () => {
         const workspace = await selectWorkspace();
         if (!workspace) return;
-        
+
         const port = await findFreePort();
         await statusBarController.startMobileServer(port);
         startServer(workspace.uri.fsPath, port, true);
@@ -227,7 +227,7 @@ function activate(context) {
         if (!activeWorkspaces.has(workspace.uri.fsPath)) {
             return;
         }
-        
+
         await statusBarController.stopServer();
         stopServer(workspace.uri.fsPath);
     });
@@ -324,7 +324,7 @@ async function generateDirectoryListing(rootPath, requestPath, isMobile) {
         ${isMobile ? `<link rel="preload" href="/libs_90f874b19b89a905a96b060ed3876dd266b6cd6b/eruda.js" as="script">` : ``}
         <link rel="preload" href="/assets_c343a20d06c17903580f7c34cd6d1b65749cd412/output.css" as="style">
         <link rel="stylesheet" href="/assets_c343a20d06c17903580f7c34cd6d1b65749cd412/output.css"/>
-        ${ isMobile ? `<script src="/libs_90f874b19b89a905a96b060ed3876dd266b6cd6b/eruda.js"></script>
+        ${isMobile ? `<script src="/libs_90f874b19b89a905a96b060ed3876dd266b6cd6b/eruda.js"></script>
         <title>Directory: ${requestPath || '/'}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script>
@@ -681,6 +681,41 @@ function injectLiveReloadScript(content, isMobile) {
     return content.replace('</body>', wsScript + '</body>');
 }
 
+// function startServer(rootPath, port, isMobile = false) {
+//     server = http.createServer((req, res) => handleRequest(req, res, rootPath, isMobile));
+//     wss = new WebSocket.Server({ server });
+
+//     // Enhanced file watcher configuration
+//     const watcher = chokidar.watch(rootPath, {
+//         ignored: /(^|[\/\\])\..|(node_modules)/,
+//         persistent: true,
+//         ignoreInitial: true,
+//         awaitWriteFinish: {
+//             stabilityThreshold: 100,
+//             pollInterval: 100
+//         }
+//     });
+
+//     function reloadBrowser(path) {
+//         console.log('File changed:', path);
+//         wss.clients.forEach((client) => {
+//             if (client.readyState === WebSocket.OPEN) {
+//                 client.send('reload');
+//             }
+//         });
+//     }
+
+//     watcher.on('change', reloadBrowser);
+//     watcher.on('add', reloadBrowser);
+//     watcher.on('unlink', reloadBrowser);
+
+//     server.listen(port, '127.0.0.1', () => {
+//         const serverUrl = `http://127.0.0.1:${port}`;
+//         open(serverUrl);
+//         activeWorkspaces.set(rootPath, { port, server, wss, watcher });
+//     });
+// }
+
 function startServer(rootPath, port, isMobile = false) {
     server = http.createServer((req, res) => handleRequest(req, res, rootPath, isMobile));
     wss = new WebSocket.Server({ server });
@@ -692,8 +727,8 @@ function startServer(rootPath, port, isMobile = false) {
         ignoreInitial: true,
         awaitWriteFinish: {
             stabilityThreshold: 100,
-            pollInterval: 100
-        }
+            pollInterval: 100,
+        },
     });
 
     function reloadBrowser(path) {
@@ -709,9 +744,11 @@ function startServer(rootPath, port, isMobile = false) {
     watcher.on('add', reloadBrowser);
     watcher.on('unlink', reloadBrowser);
 
-    server.listen(port, '127.0.0.1', () => {
-        const serverUrl = `http://127.0.0.1:${port}`;
-        open(serverUrl);
+    server.listen(port, '0.0.0.0', () => {
+        const localUrl = `http://127.0.0.1:${port}`;
+        const lanUrl = `http://${require('os').networkInterfaces().eth0?.[0]?.address || 'localhost'}:${port}`;
+        console.log(`Server running at:\n- Local: ${localUrl}\n- LAN: ${lanUrl}`);
+        open(localUrl); // Open the localhost URL
         activeWorkspaces.set(rootPath, { port, server, wss, watcher });
     });
 }
